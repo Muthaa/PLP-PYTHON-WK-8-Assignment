@@ -1,0 +1,132 @@
+{% extends "weather/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Weather Dashboard</h2>
+    {% if error %}
+        <p class="alert alert-danger">{{ error }}</p>
+    {% else %}
+        <h4>7-Day Forecast</h4>
+
+        <form method="get" class="mb-3">
+            <label for="forecast_city">Choose city for forecast:</label>
+            <select name="forecast_city" id="forecast_city" class="form-select" onchange="this.form.submit()">
+                {% for city in favorite_cities %}
+                    <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        
+        <canvas id="weatherChart"></canvas>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            let weatherChart;
+        
+            function renderChart(theme) {
+                const currentTheme = document.getElementById('htmlRoot').getAttribute('data-bs-theme');
+                const labelColor = theme === 'dark' ? '#fff' : '#212529';
+                const gridColor = theme === 'dark' ? '#444' : '#ddd';
+
+                Chart.defaults.color = labelColor;
+        
+                const ctx = document.getElementById('weatherChart').getContext('2d');
+                if (weatherChart) weatherChart.destroy();
+        
+                weatherChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [
+                            {% for day in weather_data %}
+                                "{{ day.date|date:'D, M j' }}",
+                            {% endfor %}
+                        ],
+                        datasets: [{
+                            label: 'Day Temperature (°C)',
+                            data: [
+                                {% for day in weather_data %}
+                                    {{ day.temp_day }},
+                                {% endfor %}
+                            ],
+                            borderColor: 'rgb(255, 99, 132)',
+                            fill: false,
+                            tension: 0.3
+                        }, {
+                            label: 'Night Temperature (°C)',
+                            data: [
+                                {% for day in weather_data %}
+                                    {{ day.temp_night }},
+                                {% endfor %}
+                            ],
+                            borderColor: 'rgb(54, 162, 235)',
+                            fill: false,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: labelColor
+                                }
+                            },
+                            tooltip: {
+                                bodyColor: labelColor,
+                                titleColor: labelColor
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: labelColor
+                                },
+                                grid: {
+                                    color: gridColor
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: labelColor
+                                },
+                                grid: {
+                                    color: gridColor
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        
+            document.addEventListener('DOMContentLoaded', function () {
+                const theme = document.getElementById('htmlRoot').getAttribute('data-bs-theme') || 'light';
+                renderChart(theme);
+            });
+        
+            // Re-render chart on theme change
+            window.addEventListener('theme-changed', function (e) {
+                renderChart(e.detail);
+            });
+        </script>     
+                    
+    {% endif %}
+</div>
+<h2>Your Favorite Cities</h2>
+<div class="row">
+    {% for entry in city_data %}
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5>{{ entry.city }}</h5>
+                <p>{{ entry.weather.description }} | {{ entry.weather.temp }}°C</p>
+                <p>Humidity: {{ entry.weather.humidity }}%</p>
+                <p>Wind: {{ entry.weather.wind }} m/s</p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No favorites yet. Go search and save some cities.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+

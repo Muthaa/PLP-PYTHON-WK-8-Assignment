@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual Environment
+wvenv/
+env/
+venv/
+ENV/
+*.env
+
+# Django Migrations
+*/migrations/
+!*/migrations/__init__.py
+
+# SQLite DB (if used)
+db.sqlite3
+*.sqlite3
+
+# Media
+/media/
+media/
+
+# Static files (collected)
+staticfiles/
+static_root/
+
+# VSCode and IDE configs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Env files / secrets
+.env
+.env.*
+
+# Compiled JS/CSS from build tools (if used)
+node_modules/
+build/
+dist/
+
+# Coverage / Testing
+htmlcov/
+coverage.*
+.pytest_cache/
+
+# OS-specific
+ehthumbs.db
+desktop.ini
+
+# Jupyter/Notebook
+.ipynb_checkpoints/
+
+# Git
+*.orig

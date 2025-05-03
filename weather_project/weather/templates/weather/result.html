@@ -1,0 +1,30 @@
+{% extends "weather/base.html" %}
+{% block content %}
+<div class="container py-5">
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary mb-3">⬅ Back</a>
+
+    {% if weather %}
+        <div class="card shadow">
+            <div class="card-body text-center">
+                <h2 class="card-title">🌍 Weather in {{ city }}</h2>
+                <h4 class="card-subtitle mb-2 text-muted">{{ weather.description }}</h4>
+                <p class="display-6">{{ weather.temp }}°C</p>
+                <p>Humidity: {{ weather.humidity }}%</p>
+                <p>Wind Speed: {{ weather.wind }} m/s</p>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger">Could not retrieve weather data. Try again.</div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <form method="get" action="{% url 'save_favorite' %}">
+            <input type="hidden" name="city" value="{{ city }}">
+            <button class="btn btn-outline-success">⭐ Save City</button>
+        </form>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
