@@ -84,7 +84,6 @@ weather_project/
 - [x] Auth system
 - [x] Save favorite cities
 - [x] Chart.js 7-day forecast
-- [ ] Dark/light mode
+- [x] Dark/light mode
 - [ ] Map integration
-- [ ] Deployment (Heroku/Vercel/Fly.io)
 
